@@ -1,13 +1,16 @@
 package com.project2.maddash;
 
+import com.project2.framework.Screen;
+import com.project2.framework.implementation.AndroidGame;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AndroidGame {
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 	}
@@ -17,6 +20,12 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+
+	@Override
+	public Screen getInitScreen() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
