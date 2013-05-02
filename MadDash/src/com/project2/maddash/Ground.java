@@ -11,7 +11,7 @@ public class Ground {
 		this.x = x;
 		this.y = y;
 		distance = 0;
-		speedX = -0.4;
+		speedX = GameScreen.getBg1().getSpeedX() * 3;
 	}
 	
 	public void update() {

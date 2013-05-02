@@ -30,7 +30,6 @@ public class MainMenuScreen extends Screen {
 	}
 
 	public void update(float deltaTime) {
-		Graphics g = game.getGraphics();
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
 		int len = touchEvents.size();
@@ -50,6 +49,7 @@ public class MainMenuScreen extends Screen {
 					if (inBounds(event, 233, 368, 163, 61)) {
 						options = true;
 					}
+					
 				} else {
 					helping = false;
 					options = false;

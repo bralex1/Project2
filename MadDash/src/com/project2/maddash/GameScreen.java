@@ -1,9 +1,11 @@
 package com.project2.maddash;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 
 import com.project2.framework.Game;
 import com.project2.framework.Graphics;
@@ -21,14 +23,18 @@ public class GameScreen extends Screen {
 
 	private static Background bg1, bg2;
 	private static Ground gr1, gr2;
+	private static Player player;
+	private static List<Obstacle> obstacles;
+	
+	
 	private Image currentSprite;
 	private Image[] runner;
 	private Animation anim;
 
 	private double distance;
 	private double speedX;
-	private int livesLeft = 1;
 	private Paint paint;
+	private int obsCount;
 
 	public GameScreen(Game game) {
 		super(game);
@@ -37,8 +43,13 @@ public class GameScreen extends Screen {
 		bg2 = new Background(2160, 0);
 		gr1 = new Ground(0, 450);
 		gr2 = new Ground(960, 450);
+		
+		player = new Player();
+		obstacles = new ArrayList<Obstacle>();
 
 		runner = Assets.runner;
+		
+		obsCount = 0;
 
 		anim = new Animation();
 		for (int i = 0; i < runner.length; i++) {
@@ -70,8 +81,10 @@ public class GameScreen extends Screen {
 	}
 
 	private void updateReady(List<TouchEvent> touchEvents) {
-		if (touchEvents.size() > 0)
+		if (touchEvents.size() > 0) {
 			state = GameState.Running;
+			touchEvents.remove(0);
+		}
 	}
 
 	private void updateRunning(List<TouchEvent> touchEvents) {
@@ -81,7 +94,7 @@ public class GameScreen extends Screen {
 			TouchEvent event = touchEvents.get(i);
 
 			if (event.type == TouchEvent.TOUCH_DOWN) {
-
+				player.jump();
 			}
 
 			if (event.type == TouchEvent.TOUCH_UP) {
@@ -89,14 +102,12 @@ public class GameScreen extends Screen {
 			}
 		}
 
-		if (livesLeft == 0) {
-			state = GameState.GameOver;
-		}
 
 		bg1.update();
 		bg2.update();
 		gr1.update();
 		gr2.update();
+		player.update();
 
 		distance = gr1.getDistance();
 
@@ -108,6 +119,24 @@ public class GameScreen extends Screen {
 		gr2.setSpeedX(speedX * 3);
 
 		currentSprite = anim.getImage();
+		
+		for (int i = 0; i < (distance / 400) - obsCount; i++) {
+			obstacles.add(Obstacle.nextObstacle());
+			obsCount++;
+		}
+		
+		for (int i = 0; i < obstacles.size(); i++) {
+			Obstacle obs = obstacles.get(i);
+			obs.update();
+			
+			if (Rect.intersects(player.rect, obs.rect)) {
+				state = GameState.GameOver;
+			}
+			
+			if (obs.getX() < -100) {
+				obstacles.remove(obs);
+			}
+		}
 
 		animate();
 
@@ -148,8 +177,12 @@ public class GameScreen extends Screen {
 		g.drawImage(Assets.ground, gr1.getX(), gr1.getY());
 		g.drawImage(Assets.ground, gr2.getX(), gr2.getY());
 		
-		g.drawString("Score: " + (int) distance, 30, 30, paint);
-		g.drawImage(currentSprite, 50, 382);
+		g.drawString("Score: " + (int) (distance / 100), 30, 30, paint);
+		g.drawImage(currentSprite, player.getCornerX(), player.getCornerY());
+		
+		for (Obstacle obs : obstacles) {
+			g.drawRect((int) obs.getX(), obs.getY(), obs.getWidth(), obs.getHeight(), Color.CYAN);
+		}
 
 		if (state == GameState.Ready)
 			drawReadyUI();
@@ -169,6 +202,8 @@ public class GameScreen extends Screen {
 		bg2 = null;
 		gr1 = null;
 		gr2 = null;
+		player = null;
+		obstacles = null;
 		currentSprite = null;
 		anim = null;
 		runner = null;
@@ -177,14 +212,15 @@ public class GameScreen extends Screen {
 	}
 
 	private void animate() {
-		anim.update((long) (-1 * speedX * 50));
+		anim.update((long) (-1 * speedX * 20));
 	}
 
 	private void drawReadyUI() {
 		Graphics g = game.getGraphics();
-
+		paint.setTextAlign(Paint.Align.CENTER);
 		g.drawARGB(155, 0, 0, 0);
 		g.drawString("Ready?", 400, 240, paint);
+		paint.setTextAlign(Paint.Align.LEFT);
 
 	}
 
@@ -203,7 +239,9 @@ public class GameScreen extends Screen {
 	private void drawGameOverUI() {
 		Graphics g = game.getGraphics();
 		g.drawRect(0, 0, 1281, 801, Color.BLACK);
-		g.drawString("GAME OVER.", 400, 240, paint);
+		paint.setTextAlign(Paint.Align.CENTER);
+		g.drawString("GAME OVER.", 400, 220, paint);
+		g.drawString("Final score: " + (int) (distance / 100), 400, 240, paint);
 
 	}
 
@@ -229,6 +267,7 @@ public class GameScreen extends Screen {
 		pause();
 		nullify();
 		game.setScreen(new MainMenuScreen(game));
+		return;
 	}
 
 	public static Background getBg1() {
@@ -238,23 +277,27 @@ public class GameScreen extends Screen {
 	public static double getSpeed(int distance) {
 		double speed = 0;
 
-		if (distance < 1000) {
-			speed = -0.4;
-		} else if (distance < 2000) {
-			speed = -0.5;
-		} else if (distance < 5000) {
-			speed = -1;
+		if (distance < 5000) {
+			speed = -1.7;
 		} else if (distance < 10000) {
-			speed = -1.5;
+			speed = -2.0;
 		} else if (distance < 50000) {
-			speed = -2;
-		} else if (distance < 100000) {
-			speed = -2.5;
+			speed = -2.3;
+		} else if (distance < 500000) {
+			speed = -2.9;
+		} else if (distance < 750000) {
+			speed = -3.4;
+		} else if (distance < 1500000) {
+			speed = -3.9;
 		} else {
-			speed = -3.5;
+			speed = -4.3;
 		}
 
 		return speed;
+	}
+	
+	public static Ground getGr1() {
+		return gr1;
 	}
 
 }

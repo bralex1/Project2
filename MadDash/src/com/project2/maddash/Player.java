@@ -4,42 +4,54 @@ import android.graphics.Rect;
 
 public class Player {
 	final int JUMPSPEED = -15;
-	
+
 	private int cornerX = 50;
 	private int cornerY = 382;
-	
+
 	private boolean jumped = false;
-	
+
 	private int speedY = 0;
-	
-	
-	public static Rect rect = new Rect(0, 0, 0, 0);
-	
-	public void update(){
-		cornerY += speedY;
-		speedY += 1;
-		if(speedY > 3){
-			jumped = true;
-		}
-		
-		if(cornerY < 382){
+
+	public Rect rect = new Rect(0, 0, 0, 0);
+
+	public void update() {
+
+		if (cornerY + speedY >= 382) {
 			cornerY = 382;
+		} else {
+			cornerY += speedY;
 		}
-		
-		rect.set(cornerX, cornerY, cornerX + 50, cornerY + 68);
+
+		// Handles Jumping
+		if (jumped == true) {
+			
+			speedY += 1;
+
+			if (cornerY + speedY >= 382) {
+				cornerY = 382;
+				speedY = 0;
+				jumped = false;
+			}
+
+		}
+
+
+		rect.set(cornerX + 19, cornerY + 0, cornerX + 42, cornerY + 54);
 	}
-	
-	public void jump(){
-		if(jumped == false){
+
+	public void jump() {
+		if (jumped == false) {
 			speedY = JUMPSPEED;
 			jumped = true;
 		}
 	}
-	
-	
 
 	public int getJUMPSPEED() {
 		return JUMPSPEED;
+	}
+
+	public int getCornerX() {
+		return cornerX;
 	}
 
 	public int getCornerY() {
