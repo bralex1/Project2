@@ -20,7 +20,7 @@ public class GameScreen extends Screen {
 	GameState state = GameState.Ready;
 
 	private static Background bg1, bg2;
-	private static Ground ground;
+	private static Ground gr1, gr2;
 	private Image currentSprite;
 	private Image[] runner;
 	private Animation anim;
@@ -35,7 +35,8 @@ public class GameScreen extends Screen {
 
 		bg1 = new Background(0, 0);
 		bg2 = new Background(2160, 0);
-		ground = new Ground();
+		gr1 = new Ground(0, 450);
+		gr2 = new Ground(960, 450);
 
 		runner = Assets.runner;
 
@@ -94,14 +95,17 @@ public class GameScreen extends Screen {
 
 		bg1.update();
 		bg2.update();
-		ground.update();
+		gr1.update();
+		gr2.update();
 
-		distance = ground.getDistance();
+		distance = gr1.getDistance();
 
 		speedX = getSpeed((int) distance);
 
 		bg1.setSpeedX(speedX);
 		bg2.setSpeedX(speedX);
+		gr1.setSpeedX(speedX * 3);
+		gr2.setSpeedX(speedX * 3);
 
 		currentSprite = anim.getImage();
 
@@ -141,7 +145,9 @@ public class GameScreen extends Screen {
 		Graphics g = game.getGraphics();
 		g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
 		g.drawImage(Assets.background, bg2.getBgX(), bg2.getBgY());
-		ground.paint(g);
+		g.drawImage(Assets.ground, gr1.getX(), gr1.getY());
+		g.drawImage(Assets.ground, gr2.getX(), gr2.getY());
+		
 		g.drawString("Score: " + (int) distance, 30, 30, paint);
 		g.drawImage(currentSprite, 50, 382);
 
@@ -161,7 +167,8 @@ public class GameScreen extends Screen {
 		paint = null;
 		bg1 = null;
 		bg2 = null;
-		ground = null;
+		gr1 = null;
+		gr2 = null;
 		currentSprite = null;
 		anim = null;
 		runner = null;
@@ -170,7 +177,7 @@ public class GameScreen extends Screen {
 	}
 
 	private void animate() {
-		anim.update(35);
+		anim.update((long) (-1 * speedX * 50));
 	}
 
 	private void drawReadyUI() {

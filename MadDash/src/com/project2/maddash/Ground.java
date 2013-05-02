@@ -1,48 +1,54 @@
 package com.project2.maddash;
 
-import com.project2.framework.Graphics;
 
 public class Ground {
 
-	private Tile[] pieces;
+	private int y;
+	private double x, speedX;
 	private double distance;
 	
-	public Ground() {
-		pieces = new Tile[28];
+	public Ground(int x, int y){
+		this.x = x;
+		this.y = y;
 		distance = 0;
-		
-		for (int i = 0; i < pieces.length; i++) {
-			pieces[i] = new Tile(30 * i, 450, 1);
-		}
+		speedX = -0.4;
 	}
 	
 	public void update() {
-		for (int i = 0; i < pieces.length; i++) {
-			pieces[i].update();
-			if (pieces[i].getX() < -30) {
-				int j = i - 1;
-				
-				if (i == 0) {
-					j = pieces.length - 1;
-				}
-				
-				pieces[i].setX(pieces[j].getX() + 30);
-			}
+		x += speedX;
+		distance -= speedX;
+
+		if (x <= -960){
+			x += 1920;
 		}
-		
-		distance -= pieces[0].getSpeedX();
 	}
-	
-	public void paint(Graphics g) {
-		for (Tile tile : pieces) {
-			g.drawImage(tile.getImage(), tile.getX(), tile.getY());
-		}
+
+	public int getX() {
+		return (int) x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public double getSpeedX() {
+		return speedX;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public void setSpeedX(double speedX) {
+		this.speedX = speedX;
 	}
 	
 	public double getDistance() {
 		return distance;
 	}
-	
-	
 	
 }

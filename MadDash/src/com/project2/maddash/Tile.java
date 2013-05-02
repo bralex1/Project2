@@ -16,16 +16,7 @@ public class Tile {
 	private Rect r;
 
 	public Tile(int x, int y, int typeInt) {
-		tileX = x;
-		tileY = y;
 
-		type = typeInt;
-
-		r = new Rect();
-
-		if (typeInt == 1) {
-			tileImage = Assets.groundTile;
-		}
 
 	}
 
