@@ -20,18 +20,22 @@ public class GameScreen extends Screen {
 	GameState state = GameState.Ready;
 
 	private static Background bg1, bg2;
+	private static Ground ground;
 	private Image currentSprite;
 	private Image[] runner;
 	private Animation anim;
 
-	int livesLeft = 1;
-	Paint paint;
+	private double distance;
+	private double speedX;
+	private int livesLeft = 1;
+	private Paint paint;
 
 	public GameScreen(Game game) {
 		super(game);
 
 		bg1 = new Background(0, 0);
 		bg2 = new Background(2160, 0);
+		ground = new Ground();
 
 		runner = Assets.runner;
 
@@ -44,7 +48,7 @@ public class GameScreen extends Screen {
 
 		paint = new Paint();
 		paint.setTextSize(20);
-		paint.setTextAlign(Paint.Align.CENTER);
+		paint.setTextAlign(Paint.Align.LEFT);
 		paint.setAntiAlias(true);
 		paint.setColor(Color.WHITE);
 
@@ -90,6 +94,14 @@ public class GameScreen extends Screen {
 
 		bg1.update();
 		bg2.update();
+		ground.update();
+
+		distance = ground.getDistance();
+
+		speedX = getSpeed((int) distance);
+
+		bg1.setSpeedX(speedX);
+		bg2.setSpeedX(speedX);
 
 		currentSprite = anim.getImage();
 
@@ -129,7 +141,9 @@ public class GameScreen extends Screen {
 		Graphics g = game.getGraphics();
 		g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
 		g.drawImage(Assets.background, bg2.getBgX(), bg2.getBgY());
-		g.drawImage(currentSprite, 50, 380);
+		ground.paint(g);
+		g.drawString("Score: " + (int) distance, 30, 30, paint);
+		g.drawImage(currentSprite, 50, 382);
 
 		if (state == GameState.Ready)
 			drawReadyUI();
@@ -147,6 +161,7 @@ public class GameScreen extends Screen {
 		paint = null;
 		bg1 = null;
 		bg2 = null;
+		ground = null;
 		currentSprite = null;
 		anim = null;
 		runner = null;
@@ -155,7 +170,7 @@ public class GameScreen extends Screen {
 	}
 
 	private void animate() {
-		anim.update(50);
+		anim.update(35);
 	}
 
 	private void drawReadyUI() {
@@ -203,10 +218,36 @@ public class GameScreen extends Screen {
 	}
 
 	@Override
-	public synchronized void backButton() {
+	public void backButton() {
 		pause();
 		nullify();
 		game.setScreen(new MainMenuScreen(game));
+	}
+
+	public static Background getBg1() {
+		return bg1;
+	}
+
+	public static double getSpeed(int distance) {
+		double speed = 0;
+
+		if (distance < 1000) {
+			speed = -0.4;
+		} else if (distance < 2000) {
+			speed = -0.5;
+		} else if (distance < 5000) {
+			speed = -1;
+		} else if (distance < 10000) {
+			speed = -1.5;
+		} else if (distance < 50000) {
+			speed = -2;
+		} else if (distance < 100000) {
+			speed = -2.5;
+		} else {
+			speed = -3.5;
+		}
+
+		return speed;
 	}
 
 }

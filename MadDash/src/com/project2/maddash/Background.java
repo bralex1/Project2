@@ -2,12 +2,13 @@ package com.project2.maddash;
 
 public class Background {
 	
-	private int bgX, bgY, speedX;
+	private int bgY;
+	private double bgX, speedX;
 	
 	public Background(int x, int y){
 		bgX = x;
 		bgY = y;
-		speedX = -1;
+		speedX = -0.4;
 	}
 	
 	public void update() {
@@ -19,14 +20,14 @@ public class Background {
 	}
 
 	public int getBgX() {
-		return bgX;
+		return (int) bgX;
 	}
 
 	public int getBgY() {
 		return bgY;
 	}
 
-	public int getSpeedX() {
+	public double getSpeedX() {
 		return speedX;
 	}
 
@@ -38,7 +39,7 @@ public class Background {
 		this.bgY = bgY;
 	}
 
-	public void setSpeedX(int speedX) {
+	public void setSpeedX(double speedX) {
 		this.speedX = speedX;
 	}
 	

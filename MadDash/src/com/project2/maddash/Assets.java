@@ -6,14 +6,14 @@ import com.project2.framework.Sound;
 
 public class Assets {
 
-	public static Image menu, splash, background;
+	public static Image menu, splash, background, groundTile;
 	public static Image[] runner = new Image[29];
 	public static Sound click;
 	public static Music theme;
 
 	public static void load(MainActivity game) {
 		// TODO Auto-generated method stub
-		theme = game.getAudio().createMusic("menutheme.mp3");
+		theme = game.getAudio().createMusic("maintheme.mp3");
 		theme.setLooping(true);
 		theme.setVolume(0.85f);
 		theme.play();
