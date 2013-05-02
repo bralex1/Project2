@@ -7,7 +7,7 @@ public class Background {
 	public Background(int x, int y){
 		bgX = x;
 		bgY = y;
-		speedX = 0;
+		speedX = -1;
 	}
 	
 	public void update() {

@@ -1,5 +1,106 @@
 package com.project2.maddash;
 
-public class MainMenuScreen {
+import java.util.List;
+
+import android.graphics.Color;
+import android.graphics.Paint;
+
+import com.project2.framework.Game;
+import com.project2.framework.Graphics;
+import com.project2.framework.Input.TouchEvent;
+import com.project2.framework.Screen;
+
+public class MainMenuScreen extends Screen {
+
+	private boolean helping;
+	private boolean options;
+	private Paint p;
+
+	public MainMenuScreen(Game game) {
+		super(game);
+		
+		helping = false;
+		options = false;
+		p = new Paint();
+		
+		p.setColor(Color.WHITE);
+		p.setTextAlign(Paint.Align.CENTER);
+		p.setTextSize(20);
+		p.setAntiAlias(true);
+	}
+
+	public void update(float deltaTime) {
+		Graphics g = game.getGraphics();
+		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
+
+		int len = touchEvents.size();
+		for (int i = 0; i < len; i++) {
+			TouchEvent event = touchEvents.get(i);
+			if (event.type == TouchEvent.TOUCH_UP) {
+
+				if (!helping && !options) {
+					if (inBounds(event, 175, 296, 221, 57)) {
+						game.setScreen(new GameScreen(game));
+					}
+
+					if (inBounds(event, 98, 368, 113, 60)) {
+						helping = true;
+					}
+
+					if (inBounds(event, 233, 368, 163, 61)) {
+						options = true;
+					}
+				} else {
+					helping = false;
+					options = false;
+				}
+
+			}
+		}
+	}
+
+	private boolean inBounds(TouchEvent event, int x, int y, int width,
+			int height) {
+
+		if (event.x > x && event.x < x + width - 1 && event.y > y
+				&& event.y < y + height - 1)
+			return true;
+		else
+			return false;
+
+	}
+
+	public void paint(float deltaTime) {
+		Graphics g = game.getGraphics();
+		
+		g.drawImage(Assets.menu, 0, 0);
+
+		if (helping) {
+			g.drawARGB(155, 0, 0, 0);
+			g.drawString("Run!", 400, 240, p);
+		}
+		
+		if (options) {
+			g.drawARGB(155, 0, 0, 0);
+			g.drawString("Options have not yet been implemented in this version.", 400, 240, p);
+		}
+	}
+
+	public void pause() {
+
+	}
+
+	public void resume() {
+
+	}
+
+	public void dispose() {
+
+	}
+
+	public void backButton() {
+		android.os.Process.killProcess(android.os.Process.myPid());
+	}
+
 
 }
