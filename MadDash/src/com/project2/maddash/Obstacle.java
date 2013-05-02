@@ -27,7 +27,7 @@ public class Obstacle {
 	public static Obstacle nextObstacle() {
 		Random rng = new Random();
 		
-		int width = rng.nextInt(15) + 30;
+		int width = rng.nextInt(15) + 40;
 		int height = rng.nextInt(50) + 40;
 		int y = 450 - height + 1;
 		int x = 800;

@@ -36,7 +36,7 @@ public class Player {
 		}
 
 
-		rect.set(cornerX + 19, cornerY + 0, cornerX + 42, cornerY + 54);
+		rect.set(cornerX + 19, cornerY, cornerX + 42, cornerY + 60);
 	}
 
 	public void jump() {

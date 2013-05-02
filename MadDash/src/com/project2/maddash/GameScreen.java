@@ -283,11 +283,11 @@ public class GameScreen extends Screen {
 			speed = -2.0;
 		} else if (distance < 50000) {
 			speed = -2.3;
-		} else if (distance < 500000) {
+		} else if (distance < 100000) {
 			speed = -2.9;
-		} else if (distance < 750000) {
+		} else if (distance < 500000) {
 			speed = -3.4;
-		} else if (distance < 1500000) {
+		} else if (distance < 1000000) {
 			speed = -3.9;
 		} else {
 			speed = -4.3;
