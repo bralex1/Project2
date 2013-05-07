@@ -12,7 +12,7 @@ import com.project2.framework.Sound;
 
 public class Assets {
 
-	public static Image menu, splash, background, ground;
+	public static Image menu, splash, background, ground, pause;
 	public static Image[] runner = new Image[29];
 	public static Sound click;
 	public static Music theme;

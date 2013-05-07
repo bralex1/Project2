@@ -106,10 +106,15 @@ public class GameScreen extends Screen {
 		int len = touchEvents.size();
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = touchEvents.get(i);
-
+			
 			// jump if screen is tapped
 			if (event.type == TouchEvent.TOUCH_DOWN) {
-				player.jump();
+				if (event.x > 745 && event.y < 55) {
+					touchEvents.clear();
+					state = GameState.Paused;
+				} else {
+					player.jump();					
+				}
 			}
 
 		}
@@ -148,6 +153,7 @@ public class GameScreen extends Screen {
 			obs.update();
 			
 			if (Rect.intersects(player.rect, obs.rect)) {
+				touchEvents.clear();
 				state = GameState.GameOver;
 			}
 			
@@ -168,8 +174,8 @@ public class GameScreen extends Screen {
 		int len = touchEvents.size();
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = touchEvents.get(i);
-			if (event.type == TouchEvent.TOUCH_UP) {
-
+			if (event.type == TouchEvent.TOUCH_DOWN) {
+				state = GameState.Running;
 			}
 		}
 	}
@@ -182,7 +188,7 @@ public class GameScreen extends Screen {
 		int len = touchEvents.size();
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = touchEvents.get(i);
-			if (event.type == TouchEvent.TOUCH_UP) {
+			if (event.type == TouchEvent.TOUCH_DOWN) {
 				// frees up memory
 				nullify();
 				// return to main menu
@@ -253,9 +259,11 @@ public class GameScreen extends Screen {
 	private void drawReadyUI() {
 		Graphics g = game.getGraphics();
 		paint.setTextAlign(Paint.Align.CENTER);
+		paint.setTextSize(40);
 		g.drawARGB(155, 0, 0, 0);
 		g.drawString("Ready?", 400, 240, paint);
 		paint.setTextAlign(Paint.Align.LEFT);
+		paint.setTextSize(20);
 
 	}
 
@@ -264,7 +272,7 @@ public class GameScreen extends Screen {
 	 */
 	private void drawRunningUI() {
 		Graphics g = game.getGraphics();
-
+		g.drawImage(Assets.pause, 745, 5);
 	}
 
 	/**
@@ -272,7 +280,12 @@ public class GameScreen extends Screen {
 	 */
 	private void drawPausedUI() {
 		Graphics g = game.getGraphics();
+		paint.setTextAlign(Paint.Align.CENTER);
+		paint.setTextSize(40);
 		g.drawARGB(155, 0, 0, 0);
+		g.drawString("Paused.", 400, 240, paint);
+		paint.setTextAlign(Paint.Align.LEFT);
+		paint.setTextSize(20);
 
 	}
 
@@ -282,8 +295,9 @@ public class GameScreen extends Screen {
 	private void drawGameOverUI() {
 		Graphics g = game.getGraphics();
 		g.drawRect(0, 0, 1281, 801, Color.BLACK);
+		paint.setTextSize(30);
 		paint.setTextAlign(Paint.Align.CENTER);
-		g.drawString("GAME OVER.", 400, 220, paint);
+		g.drawString("GAME OVER", 400, 200, paint);
 		g.drawString("Final score: " + (int) (distance / 100), 400, 240, paint);
 
 	}
@@ -306,7 +320,6 @@ public class GameScreen extends Screen {
 
 	@Override
 	public void backButton() {
-		pause();
 		nullify();
 		game.setScreen(new MainMenuScreen(game));
 		return;

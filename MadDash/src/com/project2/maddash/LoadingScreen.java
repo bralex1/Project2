@@ -26,6 +26,7 @@ public class LoadingScreen extends Screen {
 		Assets.click = game.getAudio().createSound("pop.wav");
 		Assets.background = g.newImage("background.png", ImageFormat.RGB565);
 		Assets.ground = g.newImage("ground.png", ImageFormat.RGB565);
+		Assets.pause = g.newImage("pause.png", ImageFormat.RGB565);
 		
 		for (int i = 1; i <= 29; i++) {
 			Assets.runner[i - 1] = g.newImage("runner/runner" + i + ".png", ImageFormat.RGB565);

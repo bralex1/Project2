@@ -25,7 +25,7 @@ public class MainMenuScreen extends Screen {
 		
 		p.setColor(Color.WHITE);
 		p.setTextAlign(Paint.Align.CENTER);
-		p.setTextSize(20);
+		p.setTextSize(30);
 		p.setAntiAlias(true);
 	}
 
@@ -95,7 +95,9 @@ public class MainMenuScreen extends Screen {
 		// draw help text
 		if (helping) {
 			g.drawARGB(155, 0, 0, 0);
-			g.drawString("Run!", 400, 240, p);
+			g.drawString("Run as far as you can!", 400, 200, p);
+			g.drawString("Tap to jump over obstacles!", 400, 240, p);
+			g.drawString("Be careful, the game speeds up!", 400, 280, p);
 		}
 		
 		// draw options menu
