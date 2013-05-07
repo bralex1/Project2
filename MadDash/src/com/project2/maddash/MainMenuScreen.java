@@ -12,8 +12,8 @@ import com.project2.framework.Screen;
 
 public class MainMenuScreen extends Screen {
 
-	private boolean helping;
-	private boolean options;
+	private boolean helping; // user is looking at help text
+	private boolean options; // user is looking at options menu
 	private Paint p;
 
 	public MainMenuScreen(Game game) {
@@ -29,27 +29,37 @@ public class MainMenuScreen extends Screen {
 		p.setAntiAlias(true);
 	}
 
+	/**
+	 * Update the menu screen based on touch events.
+	 */
 	public void update(float deltaTime) {
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
 		int len = touchEvents.size();
+		
+		// checks all user taps
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = touchEvents.get(i);
 			if (event.type == TouchEvent.TOUCH_UP) {
 
+				// find where the user has tapped (base screen)
 				if (!helping && !options) {
+					// play game
 					if (inBounds(event, 175, 296, 221, 57)) {
 						game.setScreen(new GameScreen(game));
 					}
 
+					// get help
 					if (inBounds(event, 98, 368, 113, 60)) {
 						helping = true;
 					}
 
+					// options
 					if (inBounds(event, 233, 368, 163, 61)) {
 						options = true;
 					}
 					
+				// otherwise, already looking at help/options and wants to close
 				} else {
 					helping = false;
 					options = false;
@@ -59,6 +69,9 @@ public class MainMenuScreen extends Screen {
 		}
 	}
 
+	/**
+	 * Determines if a touch event is within specific bounds.
+	 */
 	private boolean inBounds(TouchEvent event, int x, int y, int width,
 			int height) {
 
@@ -70,22 +83,29 @@ public class MainMenuScreen extends Screen {
 
 	}
 
+	/**
+	 * Display graphics of the menu screen.
+	 */
 	public void paint(float deltaTime) {
 		Graphics g = game.getGraphics();
 		
+		// draw menu
 		g.drawImage(Assets.menu, 0, 0);
 
+		// draw help text
 		if (helping) {
 			g.drawARGB(155, 0, 0, 0);
 			g.drawString("Run!", 400, 240, p);
 		}
 		
+		// draw options menu
 		if (options) {
 			g.drawARGB(155, 0, 0, 0);
 			g.drawString("Options have not yet been implemented in this version.", 400, 240, p);
 		}
 	}
 
+	
 	public void pause() {
 
 	}

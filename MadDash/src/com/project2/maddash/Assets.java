@@ -1,5 +1,11 @@
 package com.project2.maddash;
 
+/**
+ * Basic class that stores references to all external files used
+ * in the game. Any item listed here must be loaded by a loading
+ * screen before using.
+ */
+
 import com.project2.framework.Image;
 import com.project2.framework.Music;
 import com.project2.framework.Sound;
@@ -12,7 +18,6 @@ public class Assets {
 	public static Music theme;
 
 	public static void load(MainActivity game) {
-		// TODO Auto-generated method stub
 		theme = game.getAudio().createMusic("maintheme.mp3");
 		theme.setLooping(true);
 		theme.setVolume(0.85f);

@@ -1,5 +1,9 @@
 package com.project2.maddash;
 
+/**
+ * Main class that handles the running game.
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +30,6 @@ public class GameScreen extends Screen {
 	private static Player player;
 	private static List<Obstacle> obstacles;
 	
-	
 	private Image currentSprite;
 	private Image[] runner;
 	private Animation anim;
@@ -39,6 +42,7 @@ public class GameScreen extends Screen {
 	public GameScreen(Game game) {
 		super(game);
 
+		// two backgrounds and grounds to allow for infinite scrolling
 		bg1 = new Background(0, 0);
 		bg2 = new Background(2160, 0);
 		gr1 = new Ground(0, 450);
@@ -51,6 +55,7 @@ public class GameScreen extends Screen {
 		
 		obsCount = 0;
 
+		// add each frame of the runner animation
 		anim = new Animation();
 		for (int i = 0; i < runner.length; i++) {
 			anim.addFrame(runner[i], 50);
@@ -66,6 +71,9 @@ public class GameScreen extends Screen {
 
 	}
 
+	/**
+	 * Update based on current game state.
+	 */
 	public void update(float deltaTime) {
 		List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
 
@@ -80,6 +88,9 @@ public class GameScreen extends Screen {
 
 	}
 
+	/**
+	 * Waits for user to touch the screen to start the game.
+	 */
 	private void updateReady(List<TouchEvent> touchEvents) {
 		if (touchEvents.size() > 0) {
 			state = GameState.Running;
@@ -87,44 +98,51 @@ public class GameScreen extends Screen {
 		}
 	}
 
+	/**
+	 * Continually checks touch events while the game is running.
+	 */
 	private void updateRunning(List<TouchEvent> touchEvents) {
 
 		int len = touchEvents.size();
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = touchEvents.get(i);
 
+			// jump if screen is tapped
 			if (event.type == TouchEvent.TOUCH_DOWN) {
 				player.jump();
 			}
 
-			if (event.type == TouchEvent.TOUCH_UP) {
-
-			}
 		}
 
-
+		// update world
 		bg1.update();
 		bg2.update();
 		gr1.update();
 		gr2.update();
 		player.update();
 
+		// determine total travel distance
 		distance = gr1.getDistance();
 
+		// set the speed of the world based on travel distance
 		speedX = getSpeed((int) distance);
 
+		// update speeds
 		bg1.setSpeedX(speedX);
 		bg2.setSpeedX(speedX);
 		gr1.setSpeedX(speedX * 3);
 		gr2.setSpeedX(speedX * 3);
 
+		// update sprite
 		currentSprite = anim.getImage();
 		
+		// adds a new obstacle every 400 pixels
 		for (int i = 0; i < (distance / 400) - obsCount; i++) {
 			obstacles.add(Obstacle.nextObstacle());
 			obsCount++;
 		}
 		
+		// checks for collisions
 		for (int i = 0; i < obstacles.size(); i++) {
 			Obstacle obs = obstacles.get(i);
 			obs.update();
@@ -138,10 +156,14 @@ public class GameScreen extends Screen {
 			}
 		}
 
+		// animate
 		animate();
 
 	}
 
+	/**
+	 * Handles paused interaction.
+	 */
 	private void updatePaused(List<TouchEvent> touchEvents) {
 		int len = touchEvents.size();
 		for (int i = 0; i < len; i++) {
@@ -152,24 +174,27 @@ public class GameScreen extends Screen {
 		}
 	}
 
+	/**
+	 * Handles game over interaction.
+	 */
 	private void updateGameOver(List<TouchEvent> touchEvents) {
 
 		int len = touchEvents.size();
 		for (int i = 0; i < len; i++) {
 			TouchEvent event = touchEvents.get(i);
 			if (event.type == TouchEvent.TOUCH_UP) {
-				if (event.x > 300 && event.x < 980 && event.y > 100
-						&& event.y < 500) {
-					nullify();
-					game.setScreen(new MainMenuScreen(game));
-					return;
-				}
+				// frees up memory
+				nullify();
+				// return to main menu
+				game.setScreen(new MainMenuScreen(game));
+				return;
 			}
-
 		}
-
 	}
 
+	/**
+	 * Displays all images.
+	 */
 	public void paint(float deltaTime) {
 		Graphics g = game.getGraphics();
 		g.drawImage(Assets.background, bg1.getBgX(), bg1.getBgY());
@@ -184,6 +209,7 @@ public class GameScreen extends Screen {
 			g.drawRect((int) obs.getX(), obs.getY(), obs.getWidth(), obs.getHeight(), Color.CYAN);
 		}
 
+		// draws additional UI
 		if (state == GameState.Ready)
 			drawReadyUI();
 		if (state == GameState.Running)
@@ -195,6 +221,9 @@ public class GameScreen extends Screen {
 
 	}
 
+	/**
+	 * Frees unused space when game ends.
+	 */
 	private void nullify() {
 
 		paint = null;
@@ -211,10 +240,16 @@ public class GameScreen extends Screen {
 
 	}
 
+	/**
+	 * Move to next frame.
+	 */
 	private void animate() {
 		anim.update((long) (-1 * speedX * 20));
 	}
 
+	/**
+	 * User interface for a ready game.
+	 */
 	private void drawReadyUI() {
 		Graphics g = game.getGraphics();
 		paint.setTextAlign(Paint.Align.CENTER);
@@ -224,18 +259,26 @@ public class GameScreen extends Screen {
 
 	}
 
+	/**
+	 * User interface for a running game.
+	 */
 	private void drawRunningUI() {
 		Graphics g = game.getGraphics();
 
 	}
 
+	/**
+	 * User interface for a paused game.
+	 */
 	private void drawPausedUI() {
 		Graphics g = game.getGraphics();
-		// Darken the entire screen so you can display the Paused screen.
 		g.drawARGB(155, 0, 0, 0);
 
 	}
 
+	/**
+	 * User interface for game over.
+	 */
 	private void drawGameOverUI() {
 		Graphics g = game.getGraphics();
 		g.drawRect(0, 0, 1281, 801, Color.BLACK);
@@ -249,7 +292,6 @@ public class GameScreen extends Screen {
 	public void pause() {
 		if (state == GameState.Running)
 			state = GameState.Paused;
-
 	}
 
 	@Override
@@ -274,7 +316,7 @@ public class GameScreen extends Screen {
 		return bg1;
 	}
 
-	public static double getSpeed(int distance) {
+	private static double getSpeed(int distance) {
 		double speed = 0;
 
 		if (distance < 5000) {

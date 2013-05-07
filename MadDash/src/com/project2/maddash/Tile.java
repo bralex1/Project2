@@ -1,5 +1,9 @@
 package com.project2.maddash;
 
+/**
+ * This class is currently unused.
+ */
+
 import android.graphics.Rect;
 
 import com.project2.framework.Image;

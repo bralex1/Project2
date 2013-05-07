@@ -1,9 +1,13 @@
 package com.project2.maddash;
 
+/**
+ * Tracks position and speed of the background.
+ */
+
 public class Background {
 	
-	private int bgY;
-	private double bgX, speedX;
+	private int bgY; // y position (shouldn't change)
+	private double bgX, speedX; // x position and speed
 	
 	public Background(int x, int y){
 		bgX = x;
@@ -11,14 +15,21 @@ public class Background {
 		speedX = -0.4;
 	}
 	
+	/**
+	 * Update position based on current speed.
+	 */
 	public void update() {
 		bgX += speedX;
 
+		// shift background over if it moves entirely off-screen
 		if (bgX <= -2160){
 			bgX += 4320;
 		}
 	}
 
+	
+	/* Accessors and mutators. */
+	
 	public int getBgX() {
 		return (int) bgX;
 	}

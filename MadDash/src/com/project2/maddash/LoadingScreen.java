@@ -1,5 +1,11 @@
 package com.project2.maddash;
 
+/**
+ * Initializes all references in the Assets class to the
+ * appropriate external files. All files must be stored in the
+ * assets folder.
+ */
+
 import com.project2.framework.Game;
 import com.project2.framework.Graphics;
 import com.project2.framework.Graphics.ImageFormat;
@@ -11,6 +17,9 @@ public class LoadingScreen extends Screen {
 		super(game);
 	}
 
+	/**
+	 * Initializes the files.
+	 */
 	public void update(float deltaTime) {
 		Graphics g = game.getGraphics();
 		Assets.menu = g.newImage("menu.png", ImageFormat.RGB565);
@@ -25,6 +34,10 @@ public class LoadingScreen extends Screen {
 		game.setScreen(new MainMenuScreen(game));
 	}
 
+	/**
+	 * Displays the splash image loaded by the splash loading screen while all
+	 * other files are loaded.
+	 */
 	public void paint(float deltaTime) {
 		Graphics g = game.getGraphics();
 		g.drawImage(Assets.splash, 0, 0);
